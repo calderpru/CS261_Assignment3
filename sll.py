@@ -1,10 +1,9 @@
-# Name:
-# OSU Email:
+# Name: Calder Prulhiere
+# OSU Email: prulhiec@oregonstate.edu
 # Course: CS261 - Data Structures
-# Assignment:
-# Due Date:
-# Description:
-
+# Assignment: 3
+# Due Date: 24 July 2023
+# Description:  Linked List and ADT Implementation
 
 from SLNode import *
 
@@ -69,51 +68,134 @@ class LinkedList:
 
     def insert_front(self, value: object) -> None:
         """
-        TODO: Write this implementation
+        This method adds a new node at the beginning of the list
         """
-        pass
+        new_node = SLNode(value) # create a new node
+
+        new_node.next = self._head.next
+
+        self._head.next = new_node  # head node points to the new node
 
     def insert_back(self, value: object) -> None:
         """
-        TODO: Write this implementation
+        This method adds a new node at the end of the list.
         """
-        pass
+        new_node = SLNode(value)
+
+        node = self._head   # find the last node in the list
+        while node.next is not None:
+            node = node.next
+
+        node.next = new_node # last node now points to the new node
 
     def insert_at_index(self, index: int, value: object) -> None:
         """
-        TODO: Write this implementation
+        This method inserts a new value at the specified index position in the linked list.
+        If the provided index is invalid, the method raises a custom “SLLException”.
         """
-        pass
+
+        if index < 0 or index > self.length(): # Check index
+            raise SLLException('Invalid index position')
+
+        new_node = SLNode(value) # Create a new node
+
+        current = self._head
+
+        for _ in range(index): # find the node at the index
+            current = current.next
+
+        new_node.next = current.next
+        current.next = new_node
 
     def remove_at_index(self, index: int) -> None:
         """
-        TODO: Write this implementation
+        This method removes the node at the specified index position from the linked list.
+        If the provided index is invalid, raises “SLLException”.
         """
-        pass
+
+        if index < 0 or index >= self.length():
+            raise SLLException('Invalid index position')
+
+        current = self._head
+        prev = None
+
+        for _ in range(index + 1):
+            prev = current
+            current = current.next
+
+        prev.next = current.next
 
     def remove(self, value: object) -> bool:
         """
-        TODO: Write this implementation
+        This method traverses the list from the beginning to the end, and removes
+        the first node that matches the provided value.
+        Returns True if a node was removed from the list. Otherwise, it returns False.
         """
-        pass
+        current = self._head.next
+        prev = self._head
+
+        # find the node with the given value
+        while current is not None:
+            if current.value == value:
+                prev.next = current.next
+                return True
+            prev = current
+            current = current.next
+
+        return False
 
     def count(self, value: object) -> int:
         """
-        TODO: Write this implementation
+        This method counts the number of elements in the list that match the provided value.
+        Returns this number.
         """
-        pass
+        count = 0
+        current = self._head.next # Start from the first node
+
+        while current is not None:
+            if current.value == value:
+                count += 1
+            current = current.next
+
+        return count
 
     def find(self, value: object) -> bool:
         """
-        TODO: Write this implementation
+        Returns a Boolean value based on whether or not the provided value exists in the list.
         """
-        pass
+        current = self._head.next # Start at first node
+
+        while current is not None:
+            if current.value == value:
+                return True
+            current = current.next
+
+        return False
 
     def slice(self, start_index: int, size: int) -> "LinkedList":
         """
-        TODO: Write this implementation
+        Returns a new LinkedList that contains the requested number of nodes from the original list,
+        starting with the node located at the requested start index.
         """
-        pass
+        # Validate start_index and size
+        if start_index < 0 or start_index >= self.length() or size < 0 or start_index + size > self.length():
+            raise SLLException
+
+        new_list = LinkedList() # Create new linked list
+        current = self._head.next
+        index = 0
+
+        # Move to start_index
+        while index < start_index:
+            current = current.next
+            index += 1
+
+        # Copy size
+        for _ in range(size):
+            new_list.insert_back(current.value)
+            current = current.next
+
+        return new_list
 
 
 if __name__ == "__main__":

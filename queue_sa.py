@@ -1,9 +1,9 @@
-# Name:
-# OSU Email:
+# Name: Calder Prulhiere
+# OSU Email: prulhiec@oregonstate.edu
 # Course: CS261 - Data Structures
-# Assignment:
-# Due Date:
-# Description:
+# Assignment: 3
+# Due Date: 24 July 2023
+# Description:  Linked List and ADT Implementation
 
 
 # Note: Changing any part of the pre-implemented methods (besides adding  #
@@ -68,31 +68,51 @@ class Queue:
 
     def enqueue(self, value: object) -> None:
         """
-        TODO: Write this implementation
+        Add a new value to the end of the Queue.
         """
-        pass
+        if self._current_size == self._sa.length():  # If the queue is full
+            self._double_queue()  # Double the capacity of the queue
+
+        self._back = self._increment(self._back)  # Increment the back index
+        self._sa[self._back] = value  # Add the value at the back of the queue
+        self._current_size += 1  # Increment the current size
+
 
     def dequeue(self) -> object:
         """
-        TODO: Write this implementation
+        Remove and return the value from the front of the Queue.
+        If the Queue is empty, raise 'QueueException'.
         """
-        pass
+        if self.is_empty():  # If the queue is empty
+            raise QueueException  # Raise an exception
+
+        value = self._sa[self._front] # Get the value at the front of the queue
+        self._sa[self._front] = None  # Set the front of the queue to None
+        self._current_size -= 1
+        self._front = self._increment(self._front) # Increment front index
+
+        return value
 
     def front(self) -> object:
         """
-        TODO: Write this implementation
+        Return the value from the front of the Queue without removing it.
+        If the Queue is empty, raise 'QueueException'.
         """
-        pass
+        if self.is_empty():
+            raise QueueException
 
-    # The method below is optional, but recommended, to implement. #
-    # You may alter it in any way you see fit.                     #
+        return self._sa[0] # Return value front of the queue
 
     def _double_queue(self) -> None:
         """
-        TODO: Write this implementation
+        Double the capacity of the queue.
         """
-        pass
-
+        new_sa = StaticArray(self._sa.length() * 2)  # Create new StaticArray double size
+        for i in range(self._current_size):  # Copy over the elements
+            new_sa[i] = self._sa[(self._front + i) % self._sa.length()]
+        self._sa = new_sa
+        self._front = 0  # Reset front
+        self._back = self._current_size - 1 if self._current_size > 0 else -1  # Reset back
 
 # ------------------- BASIC TESTING -----------------------------------------
 
